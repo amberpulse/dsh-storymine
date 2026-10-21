@@ -1,0 +1,6 @@
+# 装上这个 bundle 时，往 profile 里插入 storymine 那一行。
+# 注意 name 写的是**包名**（不是文件路径）——loader 靠 Node 的模块解析从 profile 的
+# node_modules 找到被 link 进来的这个包。
+- insert:
+    - id: storymine
+      name: 'dsh-storymine'
