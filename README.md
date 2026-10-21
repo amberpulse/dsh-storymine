@@ -7,6 +7,35 @@
 > 这是 DSH 插件（host + client 两半），不是 storymine 内核本身。
 > 内核（`storymine.py`）负责把书切章、提取、入库；本插件负责在 DSH 里用起来。
 
+## 快速开始（三步）
+
+**1. 装进你的 profile**（桌面版也可以走侧栏「插件 → 添加插件 → 本地路径」）
+
+```bash
+dsh plugin --profile <你的profile> add /path/to/dsh-storymine
+```
+
+**2. 在 profile 的 `cordis.patch.yml` 里指一下库在哪**（不配会明确报错，不会静默失败）
+
+```yaml
+- id: storymine
+  name: 'dsh-storymine'
+  config:
+    dbPath: '/abs/path/to/storymine.db'
+    kernelPath: '/abs/path/to/storymine.py'   # 只跑 query 的话可以不填
+```
+
+**3. 重启 DSH**
+
+然后随便问一句「用 storymine_query 找几条：角色刚摊牌，下一拍该收还是该抬」，
+条目会出现在右侧「手法库」面板里，正文只留一行播报。
+
+### 怎么确认装好了
+
+- 右侧栏的「开始」引导页里多了一格 **storymine 手法库**（点开就是面板）
+- 面板底部有输入框，直接在里面问一句，条目当场出来（这条路径不经过主对话）
+- 主对话里问同样的问题，正文只有播报 + 一句提议，条目在面板
+
 ---
 
 ## 能干什么
@@ -120,6 +149,18 @@ client 半（client/client.js）
 
 client 半边是手写的 `window.__ModuleLoader__.load({ id, factory })` bundle，**没有构建步骤**——
 改完直接重启 DSH 就生效。
+
+## 常见问题
+
+| 现象 | 原因 / 怎么办 |
+|---|---|
+| `没配置手法库路径` | `dbPath` 没给。见上面「配」一节 |
+| `没配置 storymine 内核路径` | 只有 `stats/list/failures/extract/delete` 需要它；`query` 不需要 |
+| 右侧面板里没有「storymine 手法库」 | 先确认重启过 DSH（Host 代码在宿主进程里跑）；再看启动日志里有没有 `[storymine]` 开头的行 |
+| `Invalid schema for function ... type: null` | 插件版本和 DSH 版本不匹配——本插件要求 `engines.dsh: >=0.2.0 <0.3.0` |
+| `no session surface is mounted` | 面板要在已打开的会话里用；没有任何会话时 `openTab` 会拒绝（DSH 的设计） |
+| `RATE_LIMIT` / 429 | 上游渠道限流，不是插件问题；换个模型或等一会儿 |
+| 查询要等几十秒 | 两轮模式各一次模型往返。可以先调小 `shortlistSize`，或者把 `queryMode` 设成 `single` 对比 |
 
 ## 已知限制
 
