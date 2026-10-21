@@ -2,6 +2,14 @@
   "name": "dsh-storymine",
   "version": "0.1.0",
   "description": "DeepSeek Harness plugin for storymine: query a library of narrative techniques, with results shown in the right sidebar instead of the chat transcript.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amberpulse/dsh-storymine.git"
+  },
+  "homepage": "https://github.com/amberpulse/dsh-storymine#readme",
+  "bugs": {
+    "url": "https://github.com/amberpulse/dsh-storymine/issues"
+  },
   "type": "module",
   "main": "index.js",
   "exports": {
